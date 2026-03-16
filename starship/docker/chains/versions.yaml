@@ -154,8 +154,8 @@ chains:
   - name: xpla
     base: ghcr.io/xpladev/xpla
     tags:
+      - v1.9.0
       - v1.8.0
-      - v1.9.0-rc3
   - name: solana
     base: solanalabs/solana
     file: Dockerfile.solana
