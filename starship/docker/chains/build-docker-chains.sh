@@ -51,6 +51,8 @@ build_chain_tag() {
 
   local base=$(yq -r ".chains[] | select(.name==\"$chain\") | .base" versions.yaml)
   local dockerfile=$(yq -r ".chains[] | select(.name==\"$chain\") | .file // \"Dockerfile\"" versions.yaml)
+  local bin_path=$(yq -r ".chains[] | select(.name==\"$chain\") | .bin_path // \"/bin\"" versions.yaml)
+  local lib_path=$(yq -r ".chains[] | select(.name==\"$chain\") | .lib_path // \"/lib\"" versions.yaml)
 
   if [[ "$FORCE" -ne 1 ]]; then
     if image_tag_exists $DOCKER_REPO/$chain $tag; then
@@ -75,6 +77,8 @@ build_chain_tag() {
       . -f $dockerfile \
       --build-arg BASE_IMAGE=$base \
       --build-arg VERSION=$tag \
+      --build-arg BIN_PATH=$bin_path \
+      --build-arg LIB_PATH=$lib_path \
       $buildx_args && break
     color red "failed to build docker image, retrying in 5 seconds, retry: $n"
     sleep 5
